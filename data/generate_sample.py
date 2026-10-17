@@ -40,4 +40,4 @@ def generate(path: Path):
 
 
 if __name__ == "__main__":
-    generate(Path(__file__).with_name("subscriptions.csv"))
+        generate(Path(__file__).parents[1] / "src" / "modelbench" / "data" / "subscriptions.csv")
