@@ -33,7 +33,11 @@ def html_report(result):
     if matrix:
         labels = matrix["labels"]
         head = "".join(f"<th>{escape(label)}</th>" for label in labels)
-        body = "".join(f"<tr><th>{escape(label)}</th>{''.join(f'<td>{value}</td>' for value in values)}</tr>" for label, values in zip(labels, matrix["matrix"]))
+        body_rows = []
+        for label, values in zip(labels, matrix["matrix"]):
+            cells = "".join(f"<td>{value}</td>" for value in values)
+            body_rows.append(f"<tr><th>{escape(label)}</th>{cells}</tr>")
+        body = "".join(body_rows)
         confusion_html = f'<section class="panel"><div class="eyebrow">HOLDOUT · {result["test_rows"]} ROWS</div><h2>Confusion matrix</h2><p class="muted">Rows are actual labels; columns are predictions.</p><div class="table-scroll"><table class="confusion"><thead><tr><th>ACTUAL ↓ / PREDICTED →</th>{head}</tr></thead><tbody>{body}</tbody></table></div></section>'
     profile_items = [("Rows",profile["rows"]),("Features",profile["features"]),("Numeric",profile["numeric_features"]),("Categorical",profile["categorical_features"]),("Missing feature cells",profile["missing_feature_cells"]),("Unlabeled rows removed",profile["target_missing_rows_removed"])]
     profile_html = "".join(f'<div><span>{escape(str(label))}</span><b>{value}</b></div>' for label,value in profile_items)
