@@ -6,6 +6,10 @@
 
 The preview is a design mock with illustrative values, not a measured run.
 
+## Interactive browser lab
+
+Open the [live ModelBench lab](https://damnsunnyy.github.io/ModelBench/). Choose a target, train compact classification or regression models, inspect holdout metrics and a confusion matrix, and export the run as JSON. The included sample and any CSV you open are processed in your browser; no rows are uploaded. The browser version uses a majority/mean baseline, logistic/ridge regression, and a decision stump. The Python CLI below provides the full scikit-learn comparison and optional cross-validation.
+
 ## Quick start
 
 Requires Python 3.10 or later.
