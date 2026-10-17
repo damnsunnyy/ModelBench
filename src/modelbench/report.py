@@ -23,7 +23,7 @@ def html_report(result):
         metrics = model["metrics"]
         primary = metrics.get(metric)
         width = max(0, min(100, primary * 100 if primary is not None else 0))
-        cv = "—" if model["cv_mean"] is None else f"{model['cv_mean']:.3f} ± {model['cv_std']:.3f}"
+        cv = f"Unavailable: {escape(model['cv_error'])}" if model["cv_error"] else "—" if model["cv_mean"] is None else f"{model['cv_mean']:.3f} ± {model['cv_std']:.3f}"
         rows.append(f'''<tr><td><span class="rank">{model["rank"] or "—"}</span>{escape(model["model"])}</td><td><div class="metric-cell"><b>{_metric(primary)}</b><i><span style="width:{width:.1f}%"></span></i></div></td><td>{cv}</td><td>{_metric(model["fit_seconds"]) }s</td><td>{_metric(model["predict_seconds"]) }s</td><td>{" · ".join(f"{escape(key)} {_metric(value)}" for key,value in metrics.items())}</td></tr>''')
     profile = result["profile"]
     importance_rows = "".join(f'<div class="importance-row"><span>{escape(item["feature"])}</span><i><b style="width:{item["weight"]*100:.1f}%"></b></i><code>{item["weight"]:.3f}</code></div>' for item in result["feature_importance"])

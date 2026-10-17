@@ -30,6 +30,7 @@ def run_benchmark(path, target, task="classification", test_size=0.2, seed=42, c
     train_x, test_x, train_y, test_y = train_test_split(features, labels, test_size=test_size, random_state=seed, stratify=stratify)
     results = []
     fitted = {}
+    metric = primary_metric(task)
     for name, estimator in candidate_estimators(task, seed):
         pipeline = make_pipeline(train_x, estimator)
         started = time.perf_counter()
@@ -44,7 +45,9 @@ def run_benchmark(path, target, task="classification", test_size=0.2, seed=42, c
             if cv:
                 try:
                     training_counts = np.unique(train_y, return_counts=True)[1]
-                    fold_count = min(cv, int(training_counts.min())) if task == "classification" else cv
+                    fold_count = cv
+                    if task == "classification" and int(training_counts.min()) < cv:
+                        raise DatasetError(f"Cross-validation with {cv} folds needs at least {cv} training rows in every class.")
                     if fold_count < 2:
                         raise DatasetError("Each classification label needs at least two training examples for cross-validation.")
                     splitter = StratifiedKFold(n_splits=fold_count, shuffle=True, random_state=seed) if task == "classification" else KFold(n_splits=fold_count, shuffle=True, random_state=seed)
@@ -57,7 +60,6 @@ def run_benchmark(path, target, task="classification", test_size=0.2, seed=42, c
             fitted[name] = pipeline
         except Exception as exc:
             results.append({"model": name, "metrics": {}, "fit_seconds": None, "predict_seconds": None, "error": f"{type(exc).__name__}: {exc}", "cv_mean": None, "cv_std": None, "cv_error": None})
-    metric = primary_metric(task)
     valid = [row for row in results if metric in row["metrics"] and np.isfinite(row["metrics"][metric])]
     if not valid:
         raise DatasetError("Every model failed. Check the target values and feature columns.")
