@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "modelbench-local"
+version = "1.0.0"
+description = "Reproducible, local-first benchmarking for tabular machine learning"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {file = "LICENSE"}
+authors = [{name = "Shubham"}]
+keywords = ["machine-learning", "benchmark", "scikit-learn", "tabular-data", "data-science"]
+dependencies = ["pandas>=2.0", "scikit-learn>=1.2", "numpy>=1.24"]
+
+[project.scripts]
+modelbench = "modelbench.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
