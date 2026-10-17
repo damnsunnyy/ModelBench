@@ -2,7 +2,9 @@
 
 **A local-first lab for comparing tabular ML models under the same reproducible split.** ModelBench profiles a CSV, imputes and encodes features inside each training pipeline, compares simple baselines, and writes a portable HTML or JSON report.
 
-![ModelBench report preview](docs/preview.svg)
+![Illustrative ModelBench report preview; displayed values are mock design data](docs/preview.svg)
+
+The preview is a design mock with illustrative values, not a measured run.
 
 ## Quick start
 
