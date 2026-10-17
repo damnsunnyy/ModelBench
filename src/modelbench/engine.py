@@ -14,8 +14,10 @@ from .models import candidate_estimators, make_pipeline
 def run_benchmark(path, target, task="classification", test_size=0.2, seed=42, cv=0):
     features, labels = load_dataset(path, target)
     if task == "regression":
+        missing_target_rows = labels.attrs.get("missing_removed", 0)
         try:
             labels = labels.astype(float)
+            labels.attrs["missing_removed"] = missing_target_rows
         except (TypeError, ValueError) as exc:
             raise DatasetError("Regression target must contain numeric values.") from exc
     elif task != "classification":
@@ -41,7 +43,8 @@ def run_benchmark(path, target, task="classification", test_size=0.2, seed=42, c
             row = {"model": name, "metrics": metrics, "fit_seconds": fit_seconds, "predict_seconds": predict_seconds, "error": None, "cv_mean": None, "cv_std": None, "cv_error": None}
             if cv:
                 try:
-                    fold_count = min(cv, int(counts.min())) if task == "classification" else cv
+                    training_counts = np.unique(train_y, return_counts=True)[1]
+                    fold_count = min(cv, int(training_counts.min())) if task == "classification" else cv
                     if fold_count < 2:
                         raise DatasetError("Each classification label needs at least two training examples for cross-validation.")
                     splitter = StratifiedKFold(n_splits=fold_count, shuffle=True, random_state=seed) if task == "classification" else KFold(n_splits=fold_count, shuffle=True, random_state=seed)
