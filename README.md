@@ -1,5 +1,7 @@
 # ModelBench
 
+**Live demo:** [https://damnsunnyy.github.io/ModelBench/](https://damnsunnyy.github.io/ModelBench/)
+
 **A local-first lab for comparing tabular ML models under the same reproducible split.** ModelBench profiles a CSV, imputes and encodes features inside each training pipeline, compares simple baselines, and writes a portable HTML or JSON report.
 
 ![Illustrative ModelBench report preview; displayed values are mock design data](docs/preview.svg)
